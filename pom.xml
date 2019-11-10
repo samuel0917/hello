@@ -40,10 +40,10 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin> -->
+			</plugin>
 			
 			 <!-- Docker maven plugin -->
             <plugin> 
@@ -56,15 +56,15 @@
 					<id>default</id> 
 					<goals> 
 						<goal>build</goal> 
-					   <!--  <goal>push</goal> -->
+					    <goal>push</goal>
 					</goals> 
-				</execution> 
+					</execution> 
 				</executions> 
 				<configuration> 
-					<!-- 镜像名称-->
-                    <imageName>${project.artifactId}</imageName>
 					<repository>${docker.image.prefix}/${project.artifactId}</repository> 
+					<tag>${project.version}</tag>
 					<buildArgs> 
+					<!--提供参数向Dockerfile传递--> 
 						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE> 
 					</buildArgs> 
 				</configuration> 
