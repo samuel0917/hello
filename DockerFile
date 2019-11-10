@@ -1,0 +1,7 @@
+FROM java:8-jre
+VOLUME /tmp
+ARG JAR_FILE
+ADD ${JAR_FILE} Hello.jar
+RUN bash -c 'touch /Hello.jar'
+EXPOSE 8800
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/Hello.jar"]
