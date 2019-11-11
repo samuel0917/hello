@@ -9,14 +9,14 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Hello</artifactId>
+	<artifactId>hello</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Hello</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<docker.image.prefix>Hello</docker.image.prefix> <!--镜像前缀，随便取--> 
+		<docker.image.prefix>hello</docker.image.prefix>  <!--镜像前缀，随便取--> 
 	</properties>
 
 	<dependencies>
@@ -61,6 +61,7 @@
 					</execution> 
 				</executions> 
 				<configuration> 
+				
 					<repository>${docker.image.prefix}/${project.artifactId}</repository> 
 					<tag>${project.version}</tag>
 					<buildArgs> 
