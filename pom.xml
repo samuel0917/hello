@@ -61,8 +61,7 @@
 					</execution> 
 				</executions> 
 				<configuration> 
-				
-					<repository>${docker.image.prefix}/${project.artifactId}</repository> 
+					<repository>http://106.54.132.82.m.daocloud.io/${docker.image.prefix}/${project.artifactId}</repository> 
 					<tag>${project.version}</tag>
 					<buildArgs> 
 					<!--提供参数向Dockerfile传递--> 
