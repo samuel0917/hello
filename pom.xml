@@ -16,7 +16,6 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<docker.image.prefix>hello</docker.image.prefix>  <!--镜像前缀，随便取--> 
 	</properties>
 
 	<dependencies>
@@ -61,7 +60,7 @@
 					</execution> 
 				</executions> 
 				<configuration> 
-					<repository>106.54.132.82.m.daocloud.io/${docker.image.prefix}/${project.artifactId}</repository> 
+					<repository>106.54.132.82:5000/${project.artifactId}</repository> 
 					<tag>${project.version}</tag>
 					<buildArgs> 
 					<!--提供参数向Dockerfile传递--> 
