@@ -1,6 +1,6 @@
 FROM java:8-jre
 VOLUME /tmp
 ARG JAR_FILE
-ADD ${JAR_FILE} Hello-0.0.1-SNAPSHOT.jar
-RUN bash -c 'touch /Hello-0.0.1-SNAPSHOT.jar'
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/Hello-0.0.1-SNAPSHOT.jar"]
+ADD ${JAR_FILE} hello-0.1.jar
+RUN bash -c 'touch /hello-0.1.jar'
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/hello-0.1.jar"]
