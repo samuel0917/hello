@@ -60,7 +60,7 @@
 					</execution> 
 				</executions> 
 				<configuration> 
-					<repository>106.54.132.82:5000/${project.artifactId}</repository> 
+					<repository>192.168.0.111:5000/${project.artifactId}</repository>
 					<tag>${project.version}</tag>
 					<buildArgs> 
 					<!--提供参数向Dockerfile传递--> 
