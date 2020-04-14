@@ -1,0 +1,167 @@
+docker安装
+yum update
+yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+  
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+  
+  安装docker
+  
+  yum install docker-ce
+  添加开机启动docker
+  systemctl enable docker
+  systemctl start docker
+  
+  安装jdk
+  yum install java-1.8.0-openjdk.x86_64
+  安装maven
+  yum install -y maven
+  mvn -version
+  安装git
+  yum install -y git
+  git --version
+ -bash: netstat: 未找到命令 查看端口
+ netstat -tnlp | grep 8081
+  yum -y install net-tools
+  安装vi编辑器
+  yum install vim
+  docker中没有vi
+  apt-get update
+  apt-get install vim
+  tab容器名称无法补全
+  yum install -y bash-completion
+  刷新文件
+  source /usr/share/bash-completion/completions/docker
+  source /usr/share/bash-completion/bash_completion
+  
+  
+   yum -y install wget
+linux 安装jenkins
+ wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+ yum install jenkins
+ 修改jenkins端口
+ vi /etc/sysconfig/jenkins
+ 使文件修改进行生效
+ source /etc/sysconfig/jenkins
+ 给工作空间赋值jenkins权限
+ chown jenkins:jenkins /var/lib/jenkins/workspace/
+ 为jenkins创建一个Maven project
+Goals and options设置为
+ Goals and options clean install  package -D maven.test.skip=true
+ 
+ systemctl start jenkins
+ systemctl start jenkins
+ export JENKINS_HOME=/opt/jenkins
+ export PATH=$PATH:$JENKINS_HOME
+ 
+docker 开放2375远程访问端口
+ vim /usr/lib/systemd/system/docker.service
+ 
+ ExecStart 后面加 -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
+ systemctl daemon-reload
+ netstat -an | grep 2375
+ 
+ 查看是否开启防火墙
+ systemctl status firewalld
+ 查看是否开发端口
+ firewall-cmd --list-ports
+ 加入端口
+ firewall-cmd --permanent --zone=public --add-port=8080/tcp
+ 重启防火墙
+ systemctl reload firewalld
+ 
+ 
+ 安装docker registry 安装后jenkins中可以使用dockerfile-maven插件打包，将docker镜像发布到远程私人服务器
+docker search registry
+mkdir -p /opt/registry/data
+docker run -d -p 5000:5000 -v /opt/registry/data:/var/lib/registry --privileged=true --restart=always --name registry registry:latest
+http://106.54.132.82:5000/v2/
+docker tag hello-world:latest 106.54.132.82:5000/hello-world1:latest
+docker push 106.54.132.82:5000/hello-world1:latest
+docker pull 106.54.132.82:5000/hello-world1:latest
+  
+http://192.168.0.111.m.daocloud.io/
+http://192.168.0.111:5000/v2/
+
+vi /etc/docker/daemon.json
+添加私库镜像
+{
+    "registry-mirrors": [
+        "http://192.168.0.111.m.daocloud.io/"
+    ],
+    "insecure-registries":["192.168.0.111:5000"]
+}
+
+vi /usr/lib/systemd/system/docker.service
+修改
+ExecStart=/usr/bin/dockerd --registry-mirror=http://192.168.0.112.m.daocloud.io  --insecure-registry 192.168.0.112:5000
+--registry-mirror配置后有时候会导致docker无法启动 daemon.json配置registry-mirrors后不再加此参数
+ExecStart=/usr/bin/dockerd --insecure-registry 192.168.0.112:5000
+ ExecStart 后面加 -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock 不加导致镜像生产2个打出来的jar包有问题
+
+加载新配置重启docker
+systemctl daemon-reload
+systemctl restart docker
+
+/usr/share/maven/conf
+maven setting.xml使用默认的，否则会连到阿里云等自己配置的仓库无权限
+
+maven下载jar包位置
+/var/lib/jenkins/.m2/repository    jenkins账户
+/root/.m2/repository       root账户
+
+jenkins配置
+settings in filesystem
+/usr/share/maven/conf/settings.xml
+global settings file on filesystem
+/usr/share/maven/conf/settings.xml
+
+jdk
+java_home /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
+
+git
+/usr/bin/git
+
+maven 
+/usr/share/maven
+
+docker 
+/var/lib/docker
+
+build
+pom.xml
+goals and options      clean package dockerfile:build
+构建之前shell脚本
+----------------开始
+if sudo docker ps -a|grep -i hello;then
+   sudo docker rm -f hello
+fi
+if sudo docker images |grep -i hello;then
+   sudo docker rmi hello:0.1
+fi
+
+----------------结束
+构建之后shell脚本
+----------------开始
+docker run -d -p 8083:8080 --name hello hello:0.1
+----------------结束
+
+
+docker build -t helloworld .
+docker run -d -p 8082:8080 --name helloworld  helloworld
+
+docker tag 897817383250 helloworld:latest
+
+if sudo docker ps -a|grep -i helloworld;then
+   sudo docker rm -f helloworld
+fi
+#删除已建的容器，防止容器名，端口冲突
+sleep 1
+sudo docker build -t helloworld .   #根据dockerfile生成镜像
+sleep 1
+sudo docker run -p 8083:8080 -d -e TZ="Asia/Shanghai"  -v /etc/localtime:/etc/localtime:ro   --name helloworld helloworld    #运行镜像生成容器
+
